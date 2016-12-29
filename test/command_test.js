@@ -233,8 +233,7 @@ describe('Command', function() {
       }
     };
     var cmd = new Command('testCommand', {
-      calls: calls,
-
+      calls: calls
     });
     expect(cmd.run({
       foo: 'bar'
@@ -253,4 +252,19 @@ describe('Command', function() {
       });
     }).to.throw();
   });
+
+  it('should convert raised exception to reject promise', function(done) {
+    var calls = {
+      start: {
+        fn: function(env) {
+          throw new Error('error!');
+        }
+      }
+    };
+    var cmd = new Command('testCommand', {
+      calls: calls
+    });
+    expect(cmd.run()).to.be.rejected.notify(done);
+  });
+
 });

@@ -36,6 +36,12 @@ module.exports = class Command {
       } else {
         return val;
       }
+    }).catch(err => {
+      this.error('%s', err);
+      if (err.stack) {
+        this.debug('%s', err.stack);
+      }
+      throw err;
     }).finally(() => {
       this.info('completed in %sms', stopWatch.stop());
     });
@@ -73,7 +79,9 @@ module.exports = class Command {
           if (ignoreError) {
             return promise.catch(err => {
               cmd.error('error in %s (ignored): %o', name, err);
-              cmd.debug('%O', err.stack);
+              if (err.stack) {
+                cmd.debug('%O', err.stack);
+              }
             });
           } else {
             return promise;
