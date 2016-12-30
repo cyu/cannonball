@@ -14,12 +14,12 @@ export class CommandBuilder {
   }
 
   require(...requiredVars) {
-    this.require = requiredVars;
+    this._require = requiredVars;
     return this;
   }
 
   returnVar(key) {
-    this.return = key;
+    this._returnVar = key;
     return this;
   }
 
@@ -39,20 +39,21 @@ export class CommandBuilder {
 
   build(commandName) {
     return new Command(commandName, {
-      require: this.require,
-      return: this.return,
+      require: this._require,
+      return: this._returnVar,
       calls: this.calls,
       finders: this.finders,
     });
   }
+
 }
 
-[
-  'require',
-  'returnVar',
-  'define',
-  'start',
-  'find',
-].forEach(m => {
-  exports[m] = CommandBuilder.prototype[m].bind(new CommandBuilder());
-});
+CommandBuilder.createFactoryMethods = function(target, methods = ['require',
+  'returnVar', 'define', 'start', 'find'
+]) {
+  methods.forEach(m => {
+    target[m] = CommandBuilder.prototype[m].bind(new this());
+  });
+}
+
+CommandBuilder.createFactoryMethods(exports);
