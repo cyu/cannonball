@@ -10,7 +10,7 @@ describe('RequestCommand', function() {
 
   var commandFn = RequestCommand
     .start(function(env) {
-      env.response.send('Hello world');
+      env.send('Hello world');
     })
     .buildFunction('testCommand');
 

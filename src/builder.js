@@ -13,6 +13,11 @@ export class CommandBuilder {
     this.finders = {};
   }
 
+  helpers(helpers) {
+    this._helpers = helpers;
+    return this;
+  }
+
   require(...requiredVars) {
     this._require = requiredVars;
     return this;
@@ -43,13 +48,14 @@ export class CommandBuilder {
       return: this._returnVar,
       calls: this.calls,
       finders: this.finders,
+      helpers: this._helpers,
     });
   }
 
 }
 
 CommandBuilder.createFactoryMethods = function(target, methods = ['require',
-  'returnVar', 'define', 'start', 'find'
+  'helpers', 'returnVar', 'define', 'start', 'find'
 ]) {
   methods.forEach(m => {
     target[m] = CommandBuilder.prototype[m].bind(new this());
