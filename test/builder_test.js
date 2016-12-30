@@ -40,4 +40,16 @@ describe('Builder', function() {
     expect(testCommand.name).to.equal('testCommand');
   });
 
+  it('should collect helper methods', function() {
+    var builder = Builder.
+    helpers({
+      foo: function() {}
+    }).
+    helpers({
+      bar: function() {}
+    });
+    expect(builder._helpers.foo).to.exist;
+    expect(builder._helpers.bar).to.exist;
+  });
+
 });

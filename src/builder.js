@@ -14,7 +14,10 @@ export class CommandBuilder {
   }
 
   helpers(helpers) {
-    this._helpers = helpers;
+    if (!this._helpers) {
+      this._helpers = {};
+    }
+    Object.assign(this._helpers, helpers);
     return this;
   }
 
