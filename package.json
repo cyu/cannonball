@@ -1,8 +1,12 @@
 {
   "name": "cannonball",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Promise based command framework",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyu/cannonball"
+  },
   "scripts": {
     "test": "mocha --recursive",
     "watch": "babel -w src/ -d lib/",

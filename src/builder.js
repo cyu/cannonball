@@ -6,6 +6,14 @@ import {
 }
 from './utils';
 
+export function factoryMethod(name = null) {
+  if (name == null) {
+    return defaultBuilder;
+  } else {
+    return require(`./builder/${name}`);
+  }
+}
+
 export class CommandBuilder {
 
   constructor() {
@@ -66,3 +74,6 @@ CommandBuilder.createFactoryMethods = function(target, methods = ['require',
 }
 
 CommandBuilder.createFactoryMethods(exports);
+
+const defaultBuilder = new Object();
+CommandBuilder.createFactoryMethods(defaultBuilder);
