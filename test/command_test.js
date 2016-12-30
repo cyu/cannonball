@@ -267,4 +267,24 @@ describe('Command', function() {
     expect(cmd.run()).to.be.rejected.notify(done);
   });
 
+  it('should be able to add helper methods onto env', function(done) {
+    var calls = {
+      start: {
+        fn: function(env) {
+          expect(env.helperMethod()).to.equal('bar');
+        }
+      }
+    };
+    var helpers = {
+      helperMethod: function() {
+        return 'bar';
+      }
+    };
+    var cmd = new Command('testCommand', {
+      calls: calls,
+      helpers: helpers
+    });
+    expect(cmd.run()).to.eventually.notify(done);
+  });
+
 });

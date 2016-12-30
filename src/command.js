@@ -11,9 +11,10 @@ module.exports = class Command {
 
   constructor(name, options) {
     this.name = name;
-    this.finders = options.finders;
+    this.finders = options.finders || {};
     this.returnKey = options.return;
     this.require = options.require;
+    this.helpers = options.helpers || {};
 
     this.debug = debug(`${name}:debug`);
     this.info = debug(`${name}:info`);
@@ -28,7 +29,7 @@ module.exports = class Command {
     const stopWatch = new StopWatch();
     this.info("running...");
     this.requireVars(env);
-    Object.assign(env, this.calls);
+    Object.assign(env, this.calls, this.helpers);
     return this.start(env).then((val) => {
       if (this.returnKey) {
         this.debug('returning value of %s', this.returnKey);
