@@ -32,7 +32,8 @@ export class RequestCommandBuilder extends CommandBuilder {
     return function(req, res) {
       command.run({
         request: req,
-        response: res
+        response: res,
+        params: req.params
       }).catch(err => {
         res.sendStatus(500);
       }).finally(() => {
