@@ -1,12 +1,13 @@
 {
-  "name": "canonball",
+  "name": "cannonball",
   "version": "0.1.0",
   "description": "Promise based command framework",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive",
     "watch": "babel -w src/ -d lib/",
-    "compile": "babel src/ -d lib/"
+    "compile": "babel src/ -d lib/",
+    "prepublish": "npm run compile"
   },
   "author": "Calvin Yu <me@sourcebender.com>",
   "license": "MIT",
