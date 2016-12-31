@@ -121,13 +121,16 @@ module.exports = class Command {
   buildFindPromise(name, env) {
     const finder = this.finders[name];
     if (finder) {
-      let stopWatch = new StopWatch();
-      this.debug('finding %s...', name);
-      return Promise.method(finder.fn)(env).then(result => {
-        this.debug('found %s (%sms): %o', name, stopWatch.stop(),
-          result);
-        env[name] = result;
-        return result;
+      const options = finder.options || {};
+      return this.find(options.find, env).then(() => {
+        let stopWatch = new StopWatch();
+        this.debug('finding %s...', name);
+        return Promise.method(finder.fn)(env).then(result => {
+          this.debug('found %s (%sms): %o', name, stopWatch.stop(),
+            result);
+          env[name] = result;
+          return result;
+        });
       });
 
     } else {

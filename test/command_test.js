@@ -287,4 +287,36 @@ describe('Command', function() {
     expect(cmd.run()).to.eventually.notify(done);
   });
 
+  it('should support find option for finders', function(done) {
+    var finders = {
+      object1: {
+        fn: function() {
+          return 'foo';
+        }
+      },
+      object2: {
+        options: {
+          find: 'object1'
+        },
+        fn: function(env) {
+          expect(env.object1).to.exist;
+          return 'bar';
+        }
+      }
+    };
+    var calls = {
+      start: {
+        options: {
+          find: 'object2'
+        },
+        fn: function() {}
+      }
+    };
+    var cmd = new Command('testCommand', {
+      finders: finders,
+      calls: calls
+    });
+    expect(cmd.run()).to.eventually.notify(done);
+  });
+
 });
