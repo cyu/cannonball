@@ -1,6 +1,6 @@
 {
   "name": "cannonball",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Promise based command framework",
   "main": "index.js",
   "repository": {
