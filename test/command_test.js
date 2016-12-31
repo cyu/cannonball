@@ -299,7 +299,7 @@ describe('Command', function() {
           find: 'object1'
         },
         fn: function(env) {
-          expect(env.object1).to.exist;
+          expect(env.object1).to.equal('foo');
           return 'bar';
         }
       }

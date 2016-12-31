@@ -77,8 +77,8 @@ module.exports = class Command {
       const fn = Promise.method(callDef.fn);
       const cmd = this;
       return function(env) {
-        cmd.debug('calling %s...', name);
         return cmd.find(find, env).then(() => {
+          cmd.debug('calling %s...', name);
           return fn(env).catch(err => {
             if (!env.__errors) env.__errors = [];
             if (!env.__errors.find(e => e.error === err)) {
