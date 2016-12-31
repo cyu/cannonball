@@ -8,17 +8,14 @@ from '../builder';
 var helpers = {
   notFound: function() {
     this.sendStatus(404);
-  },
-  sendStatus: function() {
-    this.response.sendStatus.apply(this.response, arguments);
-  },
-  redirect: function() {
-    this.response.redirect.apply(this.response, arguments);
-  },
-  send: function() {
-    this.response.send.apply(this.response, arguments);
   }
 };
+
+['sendStatus', 'redirect', 'send', 'render'].forEach(m => {
+  helpers[m] = function() {
+    this.response[m].apply(this.response, arguments);
+  }
+});
 
 export class RequestCommandBuilder extends CommandBuilder {
 
