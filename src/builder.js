@@ -65,15 +65,22 @@ export class CommandBuilder {
 
 }
 
-CommandBuilder.createFactoryMethods = function(target, methods = ['require',
+function createFactoryMethod(methodName, BuilderClass) {
+  return function() {
+    return BuilderClass.prototype[methodName].apply(new BuilderClass(),
+      arguments);
+  }
+}
+
+function createFactoryMethods(target, BuilderClass, methods = ['require',
   'helpers', 'returnVar', 'define', 'start', 'find'
 ]) {
   methods.forEach(m => {
-    target[m] = CommandBuilder.prototype[m].bind(new this());
+    target[m] = createFactoryMethod(m, BuilderClass);
   });
 }
 
-CommandBuilder.createFactoryMethods(exports);
+exports.createFactoryMethods = createFactoryMethods;
 
 const defaultBuilder = new Object();
-CommandBuilder.createFactoryMethods(defaultBuilder);
+createFactoryMethods(defaultBuilder, CommandBuilder);

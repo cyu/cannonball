@@ -1,7 +1,8 @@
 'use strict';
 
 import {
-  CommandBuilder
+  CommandBuilder,
+  createFactoryMethods
 }
 from '../builder';
 
@@ -41,4 +42,4 @@ export class RequestCommandBuilder extends CommandBuilder {
 
 }
 
-RequestCommandBuilder.createFactoryMethods(exports);
+createFactoryMethods(exports, RequestCommandBuilder);

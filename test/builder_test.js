@@ -1,6 +1,6 @@
 var chai = require('chai');
 
-var Builder = require('../lib/builder');
+var Builder = require('../lib/builder').factoryMethod();
 
 var expect = chai.expect;
 
