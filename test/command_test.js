@@ -195,7 +195,7 @@ describe('Command', function() {
           ignoreError: true
         },
         fn: function(env) {
-          return Promise.reject('error!');
+          nonExistingMethod();
         }
       }
     };
@@ -214,7 +214,7 @@ describe('Command', function() {
       },
       failingMethod: {
         fn: function(env) {
-          return Promise.reject('error!');
+          return Promise.reject(new Error('error!'));
         }
       }
     };
@@ -317,6 +317,29 @@ describe('Command', function() {
       calls: calls
     });
     expect(cmd.run()).to.eventually.notify(done);
+  });
+
+  it('should let finder errors propagate', function(done) {
+    var finders = {
+      object1: {
+        fn: function() {
+          nonExistingMethod();
+        }
+      }
+    };
+    var calls = {
+      start: {
+        options: {
+          find: 'object1'
+        },
+        fn: function() {}
+      }
+    };
+    var cmd = new Command('testCommand', {
+      finders: finders,
+      calls: calls
+    });
+    expect(cmd.run()).to.be.rejected.notify(done);
   });
 
 });

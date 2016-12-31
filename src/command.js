@@ -38,9 +38,12 @@ module.exports = class Command {
         return val;
       }
     }).catch(err => {
-      this.error('%s', err);
-      if (err.stack) {
-        this.debug('%s', err.stack);
+      const errorData = env.__errors.find(e => e.error == err);
+      if (errorData) {
+        this.error('command failed with error in %s: %s', errorData.call,
+          err);
+      } else {
+        this.error('command failed with error: %s', err);
       }
       throw err;
     }).finally(() => {
@@ -73,24 +76,27 @@ module.exports = class Command {
       const ignoreError = (options.ignoreError == true);
       const fn = Promise.method(callDef.fn);
       const cmd = this;
-      const obj = {
-        [name](env) {
-          cmd.debug('calling %s...', name);
-          const promise = cmd.find(find, env).then(() => fn(env));
-          if (ignoreError) {
-            return promise.catch(err => {
-              cmd.error('error in %s (ignored): %o', name, err);
-              if (err.stack) {
-                cmd.debug('%O', err.stack);
-              }
-            });
-          } else {
-            return promise;
-          }
-        }
-      };
-      return obj[name];
-
+      return function(env) {
+        cmd.debug('calling %s...', name);
+        return cmd.find(find, env).then(() => {
+          return fn(env).catch(err => {
+            if (!env.__errors) env.__errors = [];
+            if (!env.__errors.find(e => e.error === err)) {
+              env.__errors.push({
+                error: err,
+                call: name
+              });
+              cmd.error('error in %s: %s', name, err);
+              cmd.debug('%O', err.stack || err);
+            }
+            if (ignoreError) {
+              cmd.info('ignoring error in %s', name);
+            } else {
+              throw err;
+            }
+          });
+        });
+      }
     } else {
       throw TypeError(`${name} is not a function in ${this.name} command`);
     }
@@ -121,18 +127,8 @@ module.exports = class Command {
   buildFindPromise(name, env) {
     const finder = this.finders[name];
     if (finder) {
-      const options = finder.options || {};
-      return this.find(options.find, env).then(() => {
-        let stopWatch = new StopWatch();
-        this.debug('finding %s...', name);
-        return Promise.method(finder.fn)(env).then(result => {
-          this.debug('found %s (%sms): %o', name, stopWatch.stop(),
-            result);
-          env[name] = result;
-          return result;
-        });
-      });
-
+      return this.defineCall(`find:${name}`, finder)(env).
+      then(result => env[name] = result);
     } else {
       throw TypeError(
         `finder function ${name} is not in ${this.name} command`);
