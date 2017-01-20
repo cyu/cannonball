@@ -29,7 +29,10 @@ module.exports = class Command {
     const stopWatch = new StopWatch();
     this.info("running...");
     this.requireVars(env);
-    Object.assign(env, this.calls, this.helpers);
+    Object.assign(env,
+      {log: {debug: this.debug, info: this.info, error: this.error}},
+      this.calls,
+      this.helpers);
     return this.start(env).then((val) => {
       if (this.returnKey) {
         this.debug('returning value of %s', this.returnKey);

@@ -22,6 +22,22 @@ describe('Command', function() {
     }).to.throw(TypeError);
   });
 
+  it('should allow logging in command function', function(done) {
+    var calls = {
+      start: {
+        fn: function(env) {
+          expect(env.log.debug).to.exist;
+          expect(env.log.error).to.exist;
+          expect(env.log.info).to.exist;
+        }
+      }
+    };
+    var cmd = new Command('testCommand', {
+      calls: calls
+    });
+    expect(cmd.run()).to.eventually.notify(done);
+  });
+
   it('should call finders before executing call', function(done) {
     var object1 = new Object();
     var finders = {
