@@ -25,6 +25,11 @@ module.exports = class Command {
     this.buildCalls(options.calls);
   }
 
+  asFunction() {
+    const cmd = this;
+    return function() { return cmd.run.apply(cmd, arguments); }
+  }
+
   run(env = {}) {
     const stopWatch = new StopWatch();
     this.info("running...");

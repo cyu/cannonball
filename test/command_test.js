@@ -64,6 +64,20 @@ describe('Command', function() {
     expect(cmd.run()).to.eventually.notify(done);
   });
 
+  it('should be convertable into into a command function', function(done) {
+    var calls = {
+      start: {
+        fn: function(env) {
+          expect(env.foo).to.equal("bar");
+        }
+      }
+    };
+    var cmd = new Command('testCommand', {
+      calls: calls
+    });
+    expect(cmd.asFunction()({foo: 'bar'})).to.eventually.notify(done);
+  });
+
   it('should only find a value once', function(done) {
     var finders = {
       "object1": {
